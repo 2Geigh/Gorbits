@@ -22,5 +22,9 @@
   "homepage": "https://github.com/2Geigh/Gorbits#readme",
   "devDependencies": {
     "typescript": "^5.9.3"
+  },
+  "dependencies": {
+    "@types/color": "^4.2.0",
+    "color": "^5.0.2"
   }
 }
