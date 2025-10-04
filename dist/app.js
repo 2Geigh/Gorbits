@@ -27,21 +27,27 @@ Viewport.RefreshCanvasDrawing(game_objects);
 // }
 let frame_number = 0;
 let milliseconds = 0;
-const isWithinBounds = (bullet) => {
+const isWithinBounds = (bullet, viewport) => {
     let isWithinBounds = { x: true, y: true };
-    if (bullet.position.x + bullet.radius >= Viewport.width_pixels) {
+    if (bullet.position.x + bullet.radius >= viewport.width_pixels) {
         isWithinBounds.x = false;
     }
     else if (bullet.position.x - bullet.radius <= 0) {
         isWithinBounds.x = false;
     }
-    if (bullet.position.y + bullet.radius >= Viewport.height_pixels) {
+    if (bullet.position.y + bullet.radius >= viewport.height_pixels) {
         isWithinBounds.y = false;
     }
     else if (bullet.position.y - bullet.radius <= 0) {
         isWithinBounds.y = false;
     }
     return isWithinBounds;
+};
+const distanceBetweenCenters = (object1, object2) => {
+    let difference_x = Math.abs(object1.position.x - object2.position.x);
+    let difference_y = Math.abs(object1.position.y - object2.position.y);
+    let distance = Math.sqrt((difference_x ** 2) + (difference_y ** 2));
+    return distance;
 };
 const GameplayLoop = setInterval(() => {
     // console.clear();
@@ -52,12 +58,12 @@ const GameplayLoop = setInterval(() => {
     frame_number += 1;
     milliseconds += Viewport.milliseconds_per_frame;
     console.clear();
-    console.log(`Time: ${milliseconds / 1000} seconds\nFrame: ${frame_number}`);
+    console.log(`Time: ${milliseconds / 1000} seconds\nFrame: ${frame_number}\nDistance between bullet and planet: ${distanceBetweenCenters(Cassiopeia, Mars)}px`);
     Cassiopeia.updatePosition();
-    if (!isWithinBounds(Cassiopeia).x) {
+    if (!isWithinBounds(Cassiopeia, Viewport).x) {
         Cassiopeia.velocity_pixels_per_frame.x *= -1;
     }
-    if (!isWithinBounds(Cassiopeia).y) {
+    if (!isWithinBounds(Cassiopeia, Viewport).y) {
         Cassiopeia.velocity_pixels_per_frame.y *= -1;
     }
     Viewport.RefreshCanvasDrawing(game_objects);
