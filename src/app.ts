@@ -1,6 +1,7 @@
 // import Color, { type ColorInstance } from "color";
 import Planet from "./classes/Planet.js";
 import Bullet from "./classes/Bullet.js";
+import Screen from "./classes/Screen.js";
 
 const canvas = document.querySelector("canvas");
 if (canvas == null) { throw new Error("No canvas element found"); }
@@ -25,5 +26,12 @@ const Cassiopeia = new Bullet(
 
 );
 
-Mars.drawToScreen(ctx);
-Cassiopeia.drawToScreen(ctx);
+let game_objects = [Mars, Cassiopeia]
+
+const Viewport = new Screen(1920, 1080, 12, canvas, game_objects, ctx);
+Viewport.RefreshCanvasDrawing(game_objects)
+
+
+// Mars.drawToScreen(ctx);
+// Cassiopeia.drawToScreen(ctx);
+
