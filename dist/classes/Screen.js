@@ -8,12 +8,14 @@ class Screen {
     seconds_per_frame;
     milliseconds_per_frame;
     inGameplayLoop;
-    game_objects;
-    constructor(width_pixels, height_pixels, frames_per_second, canvas_element, game_objects, ctx, inGameplayLoop) {
+    // game_objects: Array<(Planet | Bullet)>;
+    constructor(width_pixels, height_pixels, frames_per_second, canvas_element, 
+    // game_objects: Array<(Planet | Bullet)>,
+    ctx, inGameplayLoop) {
         this.width_pixels = width_pixels;
         this.height_pixels = height_pixels;
         this.canvas_element = canvas_element;
-        this.game_objects = game_objects;
+        // this.game_objects = game_objects;
         this.ctx = ctx;
         this.inGameplayLoop = inGameplayLoop;
         // Compute screen refresh parameters
@@ -42,11 +44,11 @@ class Screen {
     //         this.inGameplayLoop = false;
     //     }
     // };
-    RefreshCanvasDrawing() {
+    RefreshCanvasDrawing(game_objects) {
         setTimeout(() => {
             this.ctx.clearRect(0, 0, this.width_pixels, this.height_pixels);
-            for (let i = 0; i < this.game_objects.length; i++) {
-                this.game_objects[i]?.drawToScreen(this.ctx);
+            for (let i = 0; i < game_objects.length; i++) {
+                game_objects[i]?.drawToScreen(this.ctx);
             }
         }, this.milliseconds_per_frame);
     }

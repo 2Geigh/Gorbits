@@ -11,29 +11,65 @@ if ((ctx == null) || (ctx == undefined)) {
     throw new Error("No 2D rendering context found.");
 }
 // GAME SETUP
-const Mars = new Planet({ "x": 960, "y": 540 }, 50, 50, "red");
-const Cassiopeia = new Bullet({ "x": 0, "y": 540 }, { "x": 1, "y": 0 }, 10, 20, "blue");
-let game_objects = [Mars, Cassiopeia];
 let inGameplayLoop = true;
-const Viewport = new Screen(1920, 1080, 100, canvas, game_objects, ctx, inGameplayLoop);
-Viewport.RefreshCanvasDrawing();
+const Viewport = new Screen(1920, //px width
+1080, //px height
+100, // frames per second
+canvas, ctx, inGameplayLoop);
+const Mars = new Planet({ "x": 960, "y": 540 }, 50, 50, "red");
+const Cassiopeia = new Bullet({ "x": 0, "y": 540 }, { "x": 75 * 25, "y": 5 * 400 }, 10, 20, "blue", Viewport.frames_per_second);
+let game_objects = [Mars, Cassiopeia];
+Viewport.RefreshCanvasDrawing(game_objects);
 // GAMEPLAY LOOP
 // while (Viewport.inGameplayLoop) {
 // Cassiopeia.updatePosition();
 // Viewport.RefreshCanvasDrawing();
 // }
 let frame_number = 0;
+let milliseconds = 0;
+const isWithinBounds = (bullet) => {
+    let isWithinBounds = { x: true, y: true };
+    if (bullet.position.x + bullet.radius >= Viewport.width_pixels) {
+        isWithinBounds.x = false;
+    }
+    else if (bullet.position.x - bullet.radius <= 0) {
+        isWithinBounds.x = false;
+    }
+    if (bullet.position.y + bullet.radius >= Viewport.height_pixels) {
+        isWithinBounds.y = false;
+    }
+    else if (bullet.position.y - bullet.radius <= 0) {
+        isWithinBounds.y = false;
+    }
+    return isWithinBounds;
+};
 const GameplayLoop = setInterval(() => {
-    console.clear();
+    // console.clear();
     if (!Viewport.inGameplayLoop) {
         clearInterval(GameplayLoop);
-        console.log(`We've exited the gameplay loop`);
+        // console.log(`We've exited the gameplay loop`);
     }
-    Cassiopeia.updatePosition();
-    Viewport.RefreshCanvasDrawing();
-    console.log(`We're in the gameplay loop\nViewport.inGameplayLoop: ${Viewport.inGameplayLoop}\nFrame: ${frame_number}`);
     frame_number += 1;
+    milliseconds += Viewport.milliseconds_per_frame;
+    console.clear();
+    console.log(`Time: ${milliseconds / 1000} seconds\nFrame: ${frame_number}`);
+    Cassiopeia.updatePosition();
+    if (!isWithinBounds(Cassiopeia).x) {
+        Cassiopeia.velocity_pixels_per_frame.x *= -1;
+    }
+    if (!isWithinBounds(Cassiopeia).y) {
+        Cassiopeia.velocity_pixels_per_frame.y *= -1;
+    }
+    Viewport.RefreshCanvasDrawing(game_objects);
+    // console.log(/*`We're in the gameplay loop\nViewport.inGameplayLoop: ${Viewport.inGameplayLoop}\n*/`Frame: ${frame_number}`);
 }, Viewport.milliseconds_per_frame);
+// const Timer = setInterval(() => {
+//                                     if (!Viewport.inGameplayLoop) {
+//                                         clearInterval(Timer)
+//                                     }
+//                                     milliseconds += 1;
+//                                     console.clear();
+// }, 1);
 // Mars.drawToScreen(ctx);
 // Cassiopeia.drawToScreen(ctx);
 //# sourceMappingURL=app.js.map

@@ -10,14 +10,20 @@ class Screen {
     seconds_per_frame: number;
     milliseconds_per_frame: number;
     inGameplayLoop: boolean;
-    game_objects: Array<(Planet | Bullet)>;
+    // game_objects: Array<(Planet | Bullet)>;
 
-    constructor(width_pixels: number, height_pixels: number, frames_per_second: number, canvas_element: HTMLCanvasElement, game_objects: Array<(Planet | Bullet)>, ctx: CanvasRenderingContext2D, inGameplayLoop: boolean) {
+    constructor(width_pixels: number,
+                height_pixels: number,
+                frames_per_second: number,
+                canvas_element: HTMLCanvasElement,
+                // game_objects: Array<(Planet | Bullet)>,
+                ctx: CanvasRenderingContext2D,
+                inGameplayLoop: boolean) {
         
         this.width_pixels = width_pixels;
         this.height_pixels = height_pixels;
         this.canvas_element = canvas_element;
-        this.game_objects = game_objects;
+        // this.game_objects = game_objects;
         this.ctx = ctx;
         this.inGameplayLoop = inGameplayLoop;
 
@@ -53,14 +59,14 @@ class Screen {
     //     }
     // };
 
-    RefreshCanvasDrawing() {
+    RefreshCanvasDrawing(game_objects: Array<Planet|Bullet>) {
 
         setTimeout(() => {
 
             this.ctx.clearRect(0, 0, this.width_pixels, this.height_pixels);
 
-            for (let i=0; i < this.game_objects.length; i++) {
-                this.game_objects[i]?.drawToScreen(this.ctx);
+            for (let i=0; i < game_objects.length; i++) {
+                game_objects[i]?.drawToScreen(this.ctx);
             }
 
         },this.milliseconds_per_frame);
