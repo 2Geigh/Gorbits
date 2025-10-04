@@ -2,6 +2,8 @@
 import Planet from "./classes/Planet.js";
 import Bullet from "./classes/Bullet.js";
 import Screen from "./classes/Screen.js";
+import distanceBetweenCenters from "./physics/distanceBetweenCenters.js";
+import gravitationalForce from "./physics/gravitationalForce.js";
 const canvas = document.querySelector("canvas");
 if (canvas == null) {
     throw new Error("No canvas element found");
@@ -16,8 +18,18 @@ const Viewport = new Screen(1920, //px width
 1080, //px height
 100, // frames per second
 canvas, ctx, inGameplayLoop);
-const Mars = new Planet({ "x": 960, "y": 540 }, 50, 50, "red");
-const Cassiopeia = new Bullet({ "x": 0, "y": 540 }, { "x": 75 * 25, "y": 5 * 400 }, 10, 20, "blue", Viewport.frames_per_second);
+const Mars = new Planet({ "x": 960, "y": 540 }, // position
+50, // radius
+1000, // mass
+"red" // color
+);
+const Cassiopeia = new Bullet({ "x": 1920 - 300, "y": 540 }, // position
+{ "x": 100, "y": 100 }, // velocity
+10, // radius
+20, // mass
+"blue", // color
+Viewport.frames_per_second // framerate
+);
 let game_objects = [Mars, Cassiopeia];
 Viewport.RefreshCanvasDrawing(game_objects);
 // GAMEPLAY LOOP
@@ -43,12 +55,6 @@ const isWithinBounds = (bullet, viewport) => {
     }
     return isWithinBounds;
 };
-const distanceBetweenCenters = (object1, object2) => {
-    let difference_x = Math.abs(object1.position.x - object2.position.x);
-    let difference_y = Math.abs(object1.position.y - object2.position.y);
-    let distance = Math.sqrt((difference_x ** 2) + (difference_y ** 2));
-    return distance;
-};
 const GameplayLoop = setInterval(() => {
     // console.clear();
     if (!Viewport.inGameplayLoop) {
@@ -58,8 +64,17 @@ const GameplayLoop = setInterval(() => {
     frame_number += 1;
     milliseconds += Viewport.milliseconds_per_frame;
     console.clear();
-    console.log(`Time: ${milliseconds / 1000} seconds\nFrame: ${frame_number}\nDistance between bullet and planet: ${distanceBetweenCenters(Cassiopeia, Mars)}px`);
+    console.log(`
+                                                    Time: ${milliseconds / 1000} seconds\n
+                                                    Frame: ${frame_number}\n
+                                                    dx: ${distanceBetweenCenters(Cassiopeia, Mars).distance_x.toFixed(2)}px\n
+                                                    dy: ${distanceBetweenCenters(Cassiopeia, Mars).distance_y.toFixed(2)}px\n
+                                                    Fg_x: ${gravitationalForce(Cassiopeia, Mars).x.toFixed(2)}\n
+                                                    Fg_y: ${gravitationalForce(Cassiopeia, Mars).y.toFixed(2)}\n
+                                                    Fg: ${gravitationalForce(Cassiopeia, Mars).scalar}
+                                                `);
     Cassiopeia.updatePosition();
+    // HANDLE COLLISION
     if (!isWithinBounds(Cassiopeia, Viewport).x) {
         Cassiopeia.velocity_pixels_per_frame.x *= -1;
     }
@@ -68,6 +83,9 @@ const GameplayLoop = setInterval(() => {
     }
     Viewport.RefreshCanvasDrawing(game_objects);
     // console.log(/*`We're in the gameplay loop\nViewport.inGameplayLoop: ${Viewport.inGameplayLoop}\n*/`Frame: ${frame_number}`);
+    // HANDLE GRAVITY
+    Cassiopeia.velocity_pixels_per_frame.x += gravitationalForce(Cassiopeia, Mars).x;
+    Cassiopeia.velocity_pixels_per_frame.y += gravitationalForce(Cassiopeia, Mars).y;
 }, Viewport.milliseconds_per_frame);
 // const Timer = setInterval(() => {
 //                                     if (!Viewport.inGameplayLoop) {
