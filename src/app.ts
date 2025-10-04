@@ -18,7 +18,7 @@ class Planet {
     }
 
     drawToScreen(ctx: CanvasRenderingContext2D) {
-        ctx.fillStyle = "red";
+        ctx.fillStyle = this.color;
         ctx.beginPath();
         ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI)
         ctx.fill();
@@ -31,17 +31,27 @@ class Bullet {
     velocity: Coordinate;
     radius: number;
     mass: number;
+    color: string;
 
-    constructor(position: Coordinate, velocity: Coordinate, radius: number, mass: number,) {
+    constructor(position: Coordinate, velocity: Coordinate, radius: number, mass: number, color: string) {
         this.position = position;
         this.velocity = velocity;
         this.radius = radius;
         this.mass = mass;
+        this.color = color;
     }
 
     updatePosition(position: Coordinate, velocity: Coordinate) {
         position.x += velocity.x;
         position.y += velocity.y;
+    }
+
+    drawToScreen(ctx: CanvasRenderingContext2D) {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.position.x, this.position.y, this.radius, 0, 2 * Math.PI)
+        ctx.fill();
+        ctx.stroke(); 
     }
 }
 
@@ -61,8 +71,9 @@ class Bullet {
 
 const canvas = document.querySelector("canvas");
 if (canvas == null) { throw new Error("No canvas element found"); }
-const ctx = canvas?.getContext("2d");
 
+const ctx = canvas?.getContext("2d");
+if ((ctx == null) || (ctx == undefined)) { throw new Error("No 2D rendering context found."); }
 
 // const Viewport = new Screen(500, 500, false, canvas)
 
@@ -74,9 +85,14 @@ const Mars = new Planet(
                             "red"
                         );
 
-if ((ctx == null) || (ctx == undefined)) {
-    throw new Error("No 2D rendering context found.");
-}
+const Cassiopeia = new Bullet(
+                            {"x": 300, "y": 720},
+                            {"x": 0, "y": 0},
+                            10,
+                            20,
+                            "blue"
 
+);
 
 Mars.drawToScreen(ctx);
+Cassiopeia.drawToScreen(ctx);
