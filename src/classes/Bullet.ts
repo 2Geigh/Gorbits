@@ -15,9 +15,9 @@ class Bullet {
         this.color = color;
     }
 
-    updatePosition(position: Coordinate, velocity: Coordinate) {
-        position.x += velocity.x;
-        position.y += velocity.y;
+    updatePosition() {
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
     }
 
     drawToScreen(ctx: CanvasRenderingContext2D) {

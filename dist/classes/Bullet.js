@@ -11,9 +11,9 @@ class Bullet {
         this.mass = mass;
         this.color = color;
     }
-    updatePosition(position, velocity) {
-        position.x += velocity.x;
-        position.y += velocity.y;
+    updatePosition() {
+        this.position.x += this.velocity.x;
+        this.position.y += this.velocity.y;
     }
     drawToScreen(ctx) {
         ctx.fillStyle = this.color;

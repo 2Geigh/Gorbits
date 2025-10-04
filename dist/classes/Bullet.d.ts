@@ -6,7 +6,7 @@ declare class Bullet {
     mass: number;
     color: string;
     constructor(position: Coordinate, velocity: Coordinate, radius: number, mass: number, color: string);
-    updatePosition(position: Coordinate, velocity: Coordinate): void;
+    updatePosition(): void;
     drawToScreen(ctx: CanvasRenderingContext2D): void;
 }
 export default Bullet;
