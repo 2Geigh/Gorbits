@@ -21,7 +21,6 @@ const gravitationalForce = (object1, object2) => {
     else {
         gravitational_force.y = Math.abs(gravitational_force.y) * (-1);
     }
-    // gravtitationalForce *= GRAVITATIONAL_CONSTANT;
     return gravitational_force;
 };
 export default gravitationalForce;

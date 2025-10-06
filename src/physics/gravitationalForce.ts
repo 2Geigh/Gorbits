@@ -19,8 +19,6 @@ const gravitationalForce = (object1: (Planet|Bullet), object2: (Planet|Bullet)) 
     gravitational_force.y = gravitational_force.scalar * Math.sin(angle);
 
 
-
-
     if (object1.position.x < object2.position.x) {
         gravitational_force.x = Math.abs(gravitational_force.x) * (1);
     }
@@ -35,10 +33,6 @@ const gravitationalForce = (object1: (Planet|Bullet), object2: (Planet|Bullet)) 
         gravitational_force.y = Math.abs(gravitational_force.y) * (-1);
     }
 
-
-
-
-    // gravtitationalForce *= GRAVITATIONAL_CONSTANT;
     return gravitational_force;
 };
 
