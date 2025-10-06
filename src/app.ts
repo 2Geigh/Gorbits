@@ -31,8 +31,8 @@ const Mars = new Planet(
                         );
 
 const Cassiopeia = new Bullet(
-                                {"x": 1920 - 700, "y": 540}, // position
-                                {"x": 100, "y": 1000}, // velocity
+                                {"x": Viewport.width_pixels/2 - (2*Mars.radius), "y": Viewport.height_pixels/2}, // position
+                                {"x": 100, "y": 0}, // velocity
                                 10, // radius
                                 20, // mass
                                 "blue", // color
@@ -107,6 +107,11 @@ const handleCollision = (bullet: Bullet, game_objects: Array<(Planet | Bullet)>)
         let r_init = Math.sqrt((x_init**2) + (y_init**2));
         let r_final = r_init;
         let theta = Math.atan(y_init/x_init);
+
+        console.clear();
+        console.debug(`θ: ${theta/Math.PI}π`)
+        console.debug(`x uncorrected: ${x_init}`);
+        console.debug(`y uncorrected: ${y_init}`);
         
         let dr_dt_init = (1/2) * (((x_init**2) + (y_init**2))**(-1/2)) * (2*x_init*v_x_init + 2*y_init*v_y_init); // Derivative of r
         let dtheta_dt_init = (1 / (1 + ((y_init/x_init)**2))) * (v_y_init * (x_init**(-1)) + (-1) * (x_init**(-2)) * y_init * v_x_init); // Derivative of theta
@@ -132,6 +137,9 @@ const handleCollision = (bullet: Bullet, game_objects: Array<(Planet | Bullet)>)
 
                 x_corrected += obstacle.position.x;
                 y_corrected += obstacle.position.y;
+
+                console.debug(`x correction: ${x_uncorrected} -> ${x_corrected}`);
+                console.debug(`y correction: ${y_uncorrected} -> ${y_corrected}`);
 
                 bullet.position.x = x_corrected;
                 bullet.position.y = y_corrected;
